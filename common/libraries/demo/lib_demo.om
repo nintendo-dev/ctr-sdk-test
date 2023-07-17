@@ -1,0 +1,129 @@
+#!/usr/bin/env omake
+#----------------------------------------------------------------------------
+# Project:  Horizon
+#
+# Copyright (C)Nintendo Co., Ltd.  All rights reserved.
+#
+# These coded instructions, statements, and computer programs contain
+# proprietary information of Nintendo of America Inc. and/or Nintendo
+# Company Ltd., and are protected by Federal copyright law.  They may
+# not be disclosed to third parties or copied or duplicated in any form,
+# in whole or in part, without the prior written consent of Nintendo.
+#
+# $Rev: 58466 $
+#----------------------------------------------------------------------------
+
+if $(not $(defined LIB_DEMO_ROOT))
+    LIB_DEMO_ROOT = .
+    export
+
+DEMO_UTILITY_SOURCE_DIR         = $(dir $(LIB_DEMO_ROOT)/Utility)
+DEMO_SHADER_PROGRAM_SOURCE_DIR  = $(dir $(LIB_DEMO_ROOT)/ShaderProgram)
+DEMO_RENDER_DATA_SOURCE_DIR     = $(dir $(LIB_DEMO_ROOT)/RenderData)
+DEMO_RENDER_SOURCE_DIR          = $(dir $(LIB_DEMO_ROOT)/Render)
+DEMO_BODY_SOURCE_DIR            = $(dir $(LIB_DEMO_ROOT)/Body)
+DEMO_COMMAND_CACHE_SOURCE_DIR   = $(dir $(LIB_DEMO_ROOT)/CommandCache)
+
+LIB_DEMO_SOURCES[]  =   \
+                        $(DEMO_UTILITY_SOURCE_DIR)/demo_Utility.cpp \
+                        $(DEMO_UTILITY_SOURCE_DIR)/demo_MemoryManager.cpp \
+                        $(DEMO_UTILITY_SOURCE_DIR)/demo_TextureConverter.cpp \
+                        \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_ProgramObject.cpp \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_ColorFillProgram.cpp \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_DecalTextureProgram.cpp \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_FontProgram.cpp \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_FontData.cpp \
+                        $(DEMO_SHADER_PROGRAM_SOURCE_DIR)/demo_ShaderManager.cpp \
+                        \
+                        $(DEMO_RENDER_DATA_SOURCE_DIR)/demo_RenderData.cpp \
+                        $(DEMO_RENDER_DATA_SOURCE_DIR)/demo_TrianglesRenderData.cpp \
+                        $(DEMO_RENDER_DATA_SOURCE_DIR)/demo_TextsRenderData.cpp \
+                        \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_CommandList.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_FrameBuffer.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_DisplayBuffers.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_GraphicsDrawing.cpp \
+                        \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_RenderSystem.cpp \
+                        \
+                        $(DEMO_BODY_SOURCE_DIR)/demo_Body.cpp \
+                        $(DEMO_BODY_SOURCE_DIR)/demo_Cube.cpp \
+                        $(DEMO_BODY_SOURCE_DIR)/demo_Sphere.cpp \
+                        $(DEMO_BODY_SOURCE_DIR)/demo_Cylinder.cpp \
+                        $(DEMO_BODY_SOURCE_DIR)/demo_Particle.cpp \
+                        \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_RenderSystemDrawing.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_RenderSystemExt.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_RenderSystemAA.cpp \
+                        $(DEMO_RENDER_SOURCE_DIR)/demo_Light.cpp \
+                        \
+                        $(DEMO_COMMAND_CACHE_SOURCE_DIR)/demo_CommandCache.cpp
+
+
+
+####################################################################################################
+#
+# Shader binary rules
+#
+####################################################################################################
+
+VERTEX_SHADER_ASSEMBLER = $(ROOT_COMMANDS)$(DIRSEP)ctr_VertexShaderAssembler32.exe
+VERTEX_SHADER_LINKER = $(ROOT_COMMANDS)$(DIRSEP)ctr_VertexShaderLinker32.exe
+
+VERTEX_SHADER_DIR = $(dir $(LIB_DEMO_ROOT)/shaders)
+VERTEX_SHADER_ASSEMBLER_FLAGS =
+VERTEX_SHADER_LINKER_FLAGS = -M
+
+VERTEX_SHADER_OBJ_EXT = .obj
+VERTEX_SHADER_BIN_EXT = .shbin
+
+BASIC_VERTEX_SHADER_FILES = \
+    $(VERTEX_SHADER_DIR)/ColorFillVShader.vsh \
+    $(VERTEX_SHADER_DIR)/FontVShader.vsh \
+    $(VERTEX_SHADER_DIR)/DecalTextureVShader.vsh
+
+BASIC_SHADER_BINARY_NAME = BasicVShader
+
+public.ObjectFromVShader(config, files, shader_binary_name) =
+    SH_OBJ_FILES =
+    obj_dir_parent = $(config.getObjectDirectory)
+    foreach(file, $(files))
+        BASENAME = $(removesuffix $(basename $(file)))
+
+        # *.obj
+        SH_OBJ_FILE = $(obj_dir_parent)/$(BASENAME)$(VERTEX_SHADER_OBJ_EXT)
+
+        if $(not $(defined SYMBOL_PREFIX))
+            SYMBOL_PREFIX = $(uppercase $(removesuffix $(basename $(file))))
+            export
+
+        # *.vsh -> *.obj
+        $(SH_OBJ_FILE): $(file) $(BIN2OBJ) $(obj_dir_parent)
+            $(VERTEX_SHADER_ASSEMBLER) $(file) $(VERTEX_SHADER_ASSEMBLER_FLAGS) -O$(SH_OBJ_FILE) | grep -v '^.*finished - 0 error, 0 warning'
+
+        SH_OBJ_FILES += $(SH_OBJ_FILE)
+        export SH_OBJ_FILES
+
+    # *.bin
+    SH_BIN_FILE = $(obj_dir_parent)/$(shader_binary_name)$(VERTEX_SHADER_BIN_EXT)
+
+    # *.obj -> *.bin
+    $(SH_BIN_FILE): $(SH_OBJ_FILES) $(obj_dir_parent)
+        $(VERTEX_SHADER_LINKER) $(SH_OBJ_FILES) $(VERTEX_SHADER_LINKER_FLAGS) -O$(SH_BIN_FILE) | grep -v '^.*finished - 0 error, 0 warning'
+
+    # *.o
+    OFILE = $(obj_dir_parent)/$(shader_binary_name)$(EXT_OBJ)
+
+    # *.bin -> *.o
+    BIN2OBJ_FLAGS = -b $(shader_binary_name)_SHADER_BEGIN -e $(shader_binary_name)_SHADER_END
+    $(OFILE) : $(SH_BIN_FILE) $(obj_dir_parent)
+        $(BIN2OBJ) $(BIN2OBJ_FLAGS) $(SH_BIN_FILE) $(OFILE)
+
+    return $(OFILE)
+
+LIB_DEMO_OBJECTS[]  =   
+                        $`(ObjectFromVShader $(TARGET), $(BASIC_VERTEX_SHADER_FILES), $(BASIC_SHADER_BINARY_NAME))
+
+####################################################################################################
+

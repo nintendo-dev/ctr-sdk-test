@@ -1,0 +1,20 @@
+TitleInfo:
+  Category: Application
+  UniqueId: 0xF801
+
+BasicInfo:
+  # プログラムのタイトル名を指定します。
+  Title       : Petko CTR SDK Test
+  ProductCode : CTR-N-PETK
+  BackupMemoryType: None
+  MediaSize: 128MB
+  
+PlainRegion: 
+  - Europe
+
+Option:
+  FreeProductCode: true
+
+CardInfo:
+  CardDevice: None
+  

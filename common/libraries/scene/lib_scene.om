@@ -1,0 +1,32 @@
+#!/usr/bin/env omake
+#----------------------------------------------------------------------------
+# Project:  Horizon
+#
+# Copyright (C)Nintendo Co., Ltd.  All rights reserved.
+#
+# These coded instructions, statements, and computer programs contain
+# proprietary information of Nintendo of America Inc. and/or Nintendo
+# Company Ltd., and are protected by Federal copyright law.  They may
+# not be disclosed to third parties or copied or duplicated in any form,
+# in whole or in part, without the prior written consent of Nintendo.
+#
+# $Rev: 58466 $
+#----------------------------------------------------------------------------
+
+if $(not $(defined LIB_SCENE_ROOT))
+    LIB_SCENE_ROOT = .
+    export
+
+LIB_SCENE_SOURCES[] =   
+                        $(LIB_SCENE_ROOT)/GuiControlBase.cpp
+                        $(LIB_SCENE_ROOT)/GuiControlManager.cpp
+                        $(LIB_SCENE_ROOT)/GuiLabel.cpp
+                        $(LIB_SCENE_ROOT)/GuiButton.cpp
+                        $(LIB_SCENE_ROOT)/GuiUtil.cpp
+                        $(LIB_SCENE_ROOT)/SceneManager.cpp
+                        $(LIB_SCENE_ROOT)/TenKey.cpp
+                        $(LIB_SCENE_ROOT)/TextWriter.cpp
+                        $(LIB_SCENE_ROOT)/Util.cpp
+
+LIB_SCENE_OBJECTS[] =   
+                        $`(ObjectFromBinary $(TARGET), $(LIB_SCENE_ROOT)/data/nnfont_RectDrawerShader.shbin)

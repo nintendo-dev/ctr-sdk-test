@@ -1,0 +1,79 @@
+#!/usr/bin/env omake
+#----------------------------------------------------------------------------
+# Project:  Horizon
+#
+# Copyright (C) Nintendo Co., Ltd. All rights reserved.
+#
+# These coded instructions, statements, and computer programs contain
+# proprietary information of Nintendo of America Inc. and/or Nintendo
+# Company Ltd., and are protected by Federal copyright law.  They may
+# not be disclosed to third parties or copied or duplicated in any form,
+# in whole or in part, without the prior written consent of Nintendo.
+#
+# $Rev:$
+#----------------------------------------------------------------------------
+
+# A description of the directory layout
+#
+# a) When the source code is placed directly under the root directory
+#    Example:
+#     /OMakeroot
+#     /foo/bar/OMakefile
+#
+#    Result:
+#     "objects" and "images" are created under the same directory as the OMakefile.
+#
+#     /foo/bar/objects/...
+#     /foo/bar/images/..
+#
+#
+# b) When the source code is placed under the "sources" directory
+#    Example:
+#     /OMakeroot
+#     /sources/foo/bar/OMakefile
+#
+#    Result:
+#     "objects" and "images" are created under the root directory.
+#
+#     /objects/foo/bar/...
+#     /images/foo/bar/...
+#
+#
+
+# Get the root environment variables
+public.HORIZON_ROOT =
+if $(defined-env HORIZON_ROOT)
+    HORIZON_ROOT = $(absname $(string $(getenv HORIZON_ROOT)))
+    export
+
+if $(defined-env CTRSDK_ROOT)
+    CTRSDK_ROOT = $(absname $(string $(getenv CTRSDK_ROOT)))
+    if $(and $(defined-env HORIZON_ROOT), $(not $(equal $(HORIZON_ROOT), $(CTRSDK_ROOT))))
+        eprintln(HORIZON_ROOT and CTRSDK_ROOT do not match. Please set them to the same path or only define one of them.)
+        exit(1)
+    HORIZON_ROOT = $(CTRSDK_ROOT)
+    export
+
+if $(not $(HORIZON_ROOT))
+    eprintln($"$$CTRSDK_ROOT not defined.")
+    exit(1)
+
+global.CTRSDK_BUILD_ROOT = 
+    if $(defined-env CTRSDK_BUILD_ROOT)
+        value $(absname $(string $(getenv CTRSDK_BUILD_ROOT)))
+    else
+        value $(absname $(CTRSDK_ROOT)/build)
+
+oms = $(glob iD,$(CTRSDK_BUILD_ROOT)/omake*)
+include $(nth 0, $(rev $(set $(oms))))/commondefs
+
+DefineCommandVars()
+
+.PHONY: all build clean clobber
+.PHONY: run run-scripts run-emumem
+
+#
+# Read the OMakefile
+#
+.SUBDIRS: .
+

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--CTRマスターデータ提出確認書-->
+<!--
+  editor-version: マスターエディタのバージョン
+  format-version: 提出確認書のフォーマットバージョン
+  language: 提出確認書を出力した際に使用していた言語
+  -->
+<ctr-master-editor editor-version="3.7" format-version="2016-06" language="en" type="form">
+  <!--
+  "submission-info"タグ、
+  "customer-info"タグ*2、
+  "cci" or "cia"タグ、
+  
+  が配置される
+  -->
+  <submission-info>
+    <!--製品名-->
+    <product-name>Petko Test App</product-name>
+    <!--提出日-->
+    <submit-date>7/16/2023</submit-date>
+    <!--発売日-->
+    <release-date>7/16/2023</release-date>
+    <!--用途-->
+    <usage index="10">Nintendo 3DS Download Software</usage>
+    <!--用途で"その他"を選択時の追記-->
+    <usage-memo></usage-memo>
+    <!--カード販売-->
+    <card-sales></card-sales>
+    <!--ダウンロード販売-->
+    <download-sales></download-sales>
+    <!--提出バージョン-->
+    <submit-version>1</submit-version>
+    <!--ユーザへの通知の要否-->
+    <need-notice></need-notice>
+    <!--提出理由-->
+    <submit-reason index="0">New submission</submit-reason>
+    <!--変更項目-->
+    <changed-content index="-1"></changed-content>
+    <!--備考-->
+    <memo>No manual</memo>
+  </submission-info>
+  <customer-info enable="True">
+    <!--1 or 2-->
+    <id>1</id>
+    <!--貴社名-->
+    <company-name>Petko</company-name>
+    <!--部署名-->
+    <department-name>Developers</department-name>
+    <!--名前-->
+    <user-name>Petko</user-name>
+    <!--ふりがな-->
+    <user-read-name></user-read-name>
+    <!--電話番号-->
+    <tel>0833772646</tel>
+    <!--ファックス-->
+    <fax></fax>
+    <!--メールアドレス-->
+    <e-mail>petko@vmminfra.net</e-mail>
+    <!--NTSCユーザIDおよびWarioWorldユーザID-->
+    <ntsc-warioworld-user-id></ntsc-warioworld-user-id>
+  </customer-info>
+  <customer-info enable="False">
+    <!--1 or 2-->
+    <id>2</id>
+    <!--貴社名-->
+    <company-name></company-name>
+    <!--部署名-->
+    <department-name></department-name>
+    <!--名前-->
+    <user-name></user-name>
+    <!--ふりがな-->
+    <user-read-name></user-read-name>
+    <!--電話番号-->
+    <tel></tel>
+    <!--ファックス-->
+    <fax></fax>
+    <!--メールアドレス-->
+    <e-mail></e-mail>
+    <!--NTSCユーザIDおよびWarioWorldユーザID-->
+    <ntsc-warioworld-user-id></ntsc-warioworld-user-id>
+  </customer-info>
+  <company-info>
+    <!--会社コード-->
+    <company-code>0067</company-code>
+  </company-info>
+</ctr-master-editor>

@@ -1,0 +1,45 @@
+#!/usr/bin/env omake
+#----------------------------------------------------------------------------
+# Project:  Horizon
+#
+# Copyright (C)Nintendo Co., Ltd.  All rights reserved.
+#
+# These coded instructions, statements, and computer programs contain
+# proprietary information of Nintendo of America Inc. and/or Nintendo
+# Company Ltd., and are protected by Federal copyright law.  They may
+# not be disclosed to third parties or copied or duplicated in any form,
+# in whole or in part, without the prior written consent of Nintendo.
+#
+# $Rev:$
+#----------------------------------------------------------------------------
+
+.SUBDIRS: common
+
+DefineDefaultRules()
+
+SUPPORTED_TARGETS       =   CTR-T*.Process.MPCore.*
+
+SAMPLED_DEMOS_COMMON_INCLUDE_DIR   = $(dir common/include)
+INCLUDES           += $(SAMPLED_DEMOS_COMMON_INCLUDE_DIR)
+
+LIBS               +=   lib_demo
+
+# Specify the source code to build.
+SOURCES[]               =
+                            src/main.cpp
+
+DEBUG_PRINT         =   true
+
+
+# Specify the program name.
+# No extension is needed.
+TARGET_PROGRAM          =   test
+
+ROM_SPEC_FILE       =   resource/app.rsf
+CTR_BANNER_SPEC		= 	resource/banner.bsf
+
+CTR_APPTYPE = SD
+
+include $(ROOT_OMAKE)/modulerules
+
+build: $(DEFAULT_TARGETS)

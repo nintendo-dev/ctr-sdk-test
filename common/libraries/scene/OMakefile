@@ -1,0 +1,31 @@
+#!/usr/bin/env omake
+#----------------------------------------------------------------------------
+# Project:  Horizon
+#
+# Copyright (C)Nintendo Co., Ltd.  All rights reserved.
+#
+# These coded instructions, statements, and computer programs contain
+# proprietary information of Nintendo of America Inc. and/or Nintendo
+# Company Ltd., and are protected by Federal copyright law.  They may
+# not be disclosed to third parties or copied or duplicated in any form,
+# in whole or in part, without the prior written consent of Nintendo.
+#
+# $Rev: 61663 $
+#----------------------------------------------------------------------------
+SUPPORTED_TARGETS   =   CTR-TEG2.Process.MPCore.* CTR-TS.Process.MPCore.*
+
+include lib_scene.om
+
+INCLUDES       +=   ../../include/scene
+
+SOURCES         =   $(LIB_SCENE_SOURCES)
+
+BIN2OBJ_FLAGS   =   -r
+OBJECTS         =   $(LIB_SCENE_OBJECTS)
+
+TARGET_LIBRARY  =   lib_scene
+
+
+include $(ROOT_OMAKE)/modulerules
+
+build: $(DEFAULT_TARGETS)
