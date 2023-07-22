@@ -1,0 +1,19 @@
+#!/usr/bin/env omake
+
+SUPPORTED_TARGETS   =   CTR-TEG2.Process.MPCore.* CTR-TS.Process.MPCore.*
+
+include libnn_graphics.om
+
+INCLUDES       +=   ../../include/graphics
+
+SOURCES         =   $(LIB_GRAPHICS_SOURCES)
+
+BIN2OBJ_FLAGS   =   -r
+OBJECTS         =   $(LIB_GRAPHICS_OBJECTS)
+
+TARGET_LIBRARY  =   libnn_graphics
+
+
+include $(ROOT_OMAKE)/modulerules
+
+build: $(DEFAULT_TARGETS)

@@ -1,20 +1,7 @@
 #!/usr/bin/env omake
-#----------------------------------------------------------------------------
-# Project:  Horizon
-#
-# Copyright (C)Nintendo Co., Ltd.  All rights reserved.
-#
-# These coded instructions, statements, and computer programs contain
-# proprietary information of Nintendo of America Inc. and/or Nintendo
-# Company Ltd., and are protected by Federal copyright law.  They may
-# not be disclosed to third parties or copied or duplicated in any form,
-# in whole or in part, without the prior written consent of Nintendo.
-#
-# $Rev: 58466 $
-#----------------------------------------------------------------------------
 
-SAMPLE_DEMOS_COMMON_INCLUDE_DIR = $(dir include)
-INCLUDES  += $(SAMPLE_DEMOS_COMMON_INCLUDE_DIR)
+COMMON_INCLUDE_DIR = $(dir include)
+INCLUDES  += $(COMMON_INCLUDE_DIR)
 
 .SUBDIRS: $(exist-dirs libraries)
 
